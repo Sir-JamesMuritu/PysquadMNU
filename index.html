@@ -1,0 +1,39 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MNU Chatbot</title>
+</head>
+<body>
+  <h1>MNU Chatbot</h1>
+  <div id="chat-container"></div>
+  <input type="text" id="user-input" placeholder="Type a message...">
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    function sendMessage() {
+      const userInput = document.getElementById('user-input').value;
+      const chatContainer = document.getElementById('chat-container');
+
+      // Display user message
+      chatContainer.innerHTML += `<p>User: ${userInput}</p>`;
+
+      // Send user message to the server
+      fetch('/webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userInput }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Display bot response
+        chatContainer.innerHTML += `<p>Bot: ${data.message}</p>`;
+      });
+    }
+  </script>
+</body>
+</html>
